@@ -20,4 +20,47 @@
     color: white;
     box-shadow: 0 4px 12px rgba(111, 78, 55, 0.2);
   }
+
+  /* Breadcrumbs */
+  .breadcrumb-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+  }
+
+  .breadcrumb-item a:hover {
+    color: var(--color-accent);
+  }
+
+  .breadcrumb-item.active {
+    color: var(--color-text-primary);
+    font-weight: 600;
+  }
+
+  .breadcrumb-separator {
+    color: var(--color-border);
+    margin: 0 0.25rem;
+  }
+
+  /* Mobile Nav Active Indicators */
+  .mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    color: var(--color-text-secondary);
+    transition: all 0.2s;
+  }
+
+  .mobile-nav-item.active {
+    color: var(--color-accent);
+  }
+
+  .mobile-nav-item.active .icon-container {
+    background-color: rgba(111, 78, 55, 0.1);
+    border-radius: 0.75rem;
+    padding: 0.5rem;
+  }
 }
