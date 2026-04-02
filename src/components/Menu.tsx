@@ -216,7 +216,7 @@ export default function Menu() {
       const order = await api.createOrder(items, total, paymentMethod, selectedTable, customerName);
       setCart([]);
       setIsCartOpen(false);
-      navigate('/order-confirmation', { state: { order } });
+      navigate('/order-confirmation', { state: { order: { ...order, items } } });
     } catch (err: any) {
       alert('Gagal memproses pesanan: ' + err.message);
     } finally {

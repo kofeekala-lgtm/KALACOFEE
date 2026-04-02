@@ -89,25 +89,48 @@ export default function OrderConfirmation() {
             <div className="bg-[#FDFCFB] rounded-2xl border border-[#E8E1D9] divide-y divide-[#E8E1D9]">
               <div className="p-4 space-y-4">
                 {order.items?.map((item: any, idx: number) => (
-                  <div key={idx} className="flex justify-between items-start">
+                  <div key={idx} className="flex justify-between items-start py-4 first:pt-0 last:pb-0">
                     <div className="flex-1">
-                      <p className="text-[#6F4E37] font-bold">
-                        {item.name} <span className="text-[#8C7B6E] font-normal">x{item.quantity}</span>
-                      </p>
-                      {item.customizations?.map((c: any) => (
-                        <p key={c.groupName} className="text-[10px] text-[#8C7B6E]">
-                          {c.groupName}: {c.selectedOptions.map((o: any) => o.name).join(', ')}
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="bg-[#6F4E37]/10 text-[#6F4E37] text-[10px] font-black px-2 py-0.5 rounded-full">
+                          x{item.quantity}
+                        </span>
+                        <p className="text-[#6F4E37] font-bold text-base">
+                          {item.name}
                         </p>
-                      ))}
+                      </div>
+                      
+                      {/* Add-ons / Customizations */}
+                      <div className="space-y-1 ml-9">
+                        {item.customizations?.map((c: any) => (
+                          <div key={c.groupName} className="flex items-center gap-2">
+                            <span className="text-[10px] text-[#8C7B6E] font-medium leading-none">
+                              {c.groupName}:
+                            </span>
+                            <div className="flex flex-wrap gap-1">
+                              {c.selectedOptions.map((o: any) => (
+                                <span key={o.name} className="text-[9px] bg-[#F5F1ED] text-[#6F4E37] border border-[#E8E1D9] px-1.5 py-0.5 rounded-md font-bold">
+                                  {o.name} {o.price > 0 && `(Rp ${o.price.toLocaleString()})`}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
                       {item.notes && (
-                        <p className="text-[10px] italic text-[#8C7B6E] mt-1 bg-[#F5F1ED] px-2 py-1 rounded inline-block">
-                          "{item.notes}"
-                        </p>
+                        <div className="ml-9 mt-2 p-2 bg-yellow-50 border-l-2 border-yellow-200 rounded-r-lg">
+                          <p className="text-[10px] italic text-[#8C7B6E]">
+                            "{item.notes}"
+                          </p>
+                        </div>
                       )}
                     </div>
-                    <p className="text-sm font-bold text-[#6F4E37]">
-                      Rp {(item.price * item.quantity).toLocaleString()}
-                    </p>
+                    <div className="text-right">
+                      <p className="text-sm font-black text-[#6F4E37]">
+                        Rp {(item.price * item.quantity).toLocaleString()}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>
