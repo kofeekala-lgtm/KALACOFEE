@@ -40,10 +40,19 @@ export default function Inventory() {
   const [filterLowStock, setFilterLowStock] = useState(false);
 
   useEffect(() => {
-    loadIngredients();
-    loadMovements();
-    api.getProducts().then(setProducts);
-    api.getUnits().then(setUnits);
+    const fetchData = async () => {
+      const [ingredientsData, movementsData, productsData, unitsData] = await Promise.all([
+        api.getIngredients(),
+        api.getStockMovements(),
+        api.getProducts(),
+        api.getUnits()
+      ]);
+      setIngredients(ingredientsData);
+      setMovements(movementsData);
+      setProducts(productsData);
+      setUnits(unitsData);
+    };
+    fetchData();
   }, []);
 
   const loadIngredients = () => {
