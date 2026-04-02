@@ -210,6 +210,30 @@ function AdminContent() {
     </div>
   );
 
+  const StatsCard = ({ title, value, icon, color }: { title: string, value: string | number, icon: React.ReactNode, color: 'blue' | 'orange' | 'green' }) => {
+    const colorClasses = {
+      blue: 'bg-blue-50 text-blue-600 border-blue-100',
+      orange: 'bg-orange-50 text-orange-600 border-orange-100',
+      green: 'bg-green-50 text-green-600 border-green-100'
+    };
+    
+    return (
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="bg-white p-6 rounded-3xl border border-[#E8E1D9] shadow-sm hover:shadow-md transition-shadow flex items-center gap-4"
+      >
+        <div className={`p-4 rounded-2xl border ${colorClasses[color]}`}>
+          {icon}
+        </div>
+        <div>
+          <p className="text-xs font-bold text-[#8C7B6E] uppercase tracking-wider mb-1">{title}</p>
+          <p className="text-2xl font-black text-[#1A1A1A]">{value}</p>
+        </div>
+      </motion.div>
+    );
+  };
+
   return (
     <div className="space-y-4 md:space-y-8">
       <header className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
@@ -261,6 +285,28 @@ function AdminContent() {
           </div>
         </div>
       </header>
+
+      {/* Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        <StatsCard 
+          title="Total Pesanan" 
+          value={filteredOrders.length} 
+          icon={<Receipt size={24} />}
+          color="blue"
+        />
+        <StatsCard 
+          title="Pesanan Menunggu" 
+          value={pendingOrders.length} 
+          icon={<Clock size={24} />}
+          color="orange"
+        />
+        <StatsCard 
+          title="Total Pendapatan" 
+          value={`Rp ${filteredOrders.reduce((sum, o) => sum + o.total_amount, 0).toLocaleString()}`} 
+          icon={<CheckCircle2 size={24} />}
+          color="green"
+        />
+      </div>
 
       {/* Tabs */}
       <div className="flex items-center gap-4 border-b border-[#E8E1D9]">
