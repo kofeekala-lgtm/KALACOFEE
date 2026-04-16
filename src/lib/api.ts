@@ -127,16 +127,7 @@ export interface Order {
   status: 'Menunggu' | 'Selesai' | 'Batal';
 }
 
-export interface Table {
-  id: string;
-  name: string;
-  is_available: boolean;
-  reservation?: {
-    customer_name: string;
-    start_time: string;
-    end_time: string;
-  };
-}
+
 
 export interface CafeProfile {
   name: string;
@@ -244,12 +235,15 @@ export const api = {
     const { data, error } = await supabase.from('cafe_profile').select('*').limit(1).single();
     if (error || !data) {
       return {
-        name: 'Nama Cafe',
-        address: '',
-        phone: '',
-        email: '',
-        bank_accounts: [],
-        opening_hours: []
+        name: 'KALA KOPI',
+        address: 'Jl. Cigadung Raya No. 123, Cigadung, Kec. Cibeunying Kaler, Kota Bandung, Jawa Barat 40191',
+        phone: '0819 9721 7298',
+        email: 'hello@tokokopikala.com',
+        bank_accounts: [{ bank_name: 'QRIS', account_number: 'KALA KOPI', account_holder: 'KALA KOPI' }],
+        opening_hours: [
+          { day: 'Senin - Jumat', hours: '08:00 - 22:00' },
+          { day: 'Sabtu - Minggu', hours: '09:00 - 23:00' }
+        ]
       };
     }
     return data;
@@ -271,30 +265,7 @@ export const api = {
       category_name: p.categories?.name || 'Unknown'
     }));
   },
-  getTables: async () => {
-    const { data } = await supabase.from('tables').select('*');
-    return data || [];
-  },
-  addTable: async (name: string) => {
-    const id = Date.now().toString();
-    const { data } = await supabase.from('tables').insert([{ id, name, is_available: true }]).select().single();
-    return data;
-  },
-  updateTable: async (id: string, updates: Partial<Table>) => {
-    const { data } = await supabase.from('tables').update(updates).eq('id', id).select().single();
-    return data;
-  },
-  deleteTable: async (id: string) => {
-    await supabase.from('tables').delete().eq('id', id);
-  },
-  reserveTable: async (id: string, reservation: { customer_name: string; start_time: string; end_time: string }) => {
-    const { data } = await supabase.from('tables').update({ reservation, is_available: false }).eq('id', id).select().single();
-    return data;
-  },
-  cancelReservation: async (id: string) => {
-    const { data } = await supabase.from('tables').update({ reservation: null, is_available: true }).eq('id', id).select().single();
-    return data;
-  },
+
   addProduct: async (product: Omit<Product, 'id' | 'category_name'>) => {
     const { data } = await supabase.from('products').insert([product]).select('*, categories(name)').single();
     return { ...data, category_name: data.categories?.name || 'Unknown' };

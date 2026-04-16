@@ -58,7 +58,7 @@ export default function OrderConfirmation() {
 
         <div className="p-8 space-y-8">
           {/* Order Info */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-[#FDFCFB] p-4 rounded-2xl border border-[#E8E1D9]">
               <p className="text-xs text-[#8C7B6E] uppercase tracking-wider font-bold mb-1">Pelanggan</p>
               <p className="text-lg font-bold text-[#6F4E37] truncate">{order.customer_name || 'Tamu'}</p>
@@ -66,10 +66,6 @@ export default function OrderConfirmation() {
             <div className="bg-[#FDFCFB] p-4 rounded-2xl border border-[#E8E1D9]">
               <p className="text-xs text-[#8C7B6E] uppercase tracking-wider font-bold mb-1">Nomor Pesanan</p>
               <p className="text-lg font-bold text-[#6F4E37]">#ORD-{order.id.toString().padStart(4, '0')}</p>
-            </div>
-            <div className="bg-[#FDFCFB] p-4 rounded-2xl border border-[#E8E1D9]">
-              <p className="text-xs text-[#8C7B6E] uppercase tracking-wider font-bold mb-1">Meja</p>
-              <p className="text-lg font-bold text-[#6F4E37]">{order.table_number || 'N/A'}</p>
             </div>
             <div className="bg-[#FDFCFB] p-4 rounded-2xl border border-[#E8E1D9]">
               <p className="text-xs text-[#8C7B6E] uppercase tracking-wider font-bold mb-1">Estimasi Selesai</p>

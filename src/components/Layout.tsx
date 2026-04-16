@@ -64,7 +64,7 @@ export default function Layout({ user, onLogout }: { user: any, onLogout: () => 
           <div className="w-10 h-10 bg-[#6F4E37] rounded-xl flex items-center justify-center text-white">
             <Coffee size={24} />
           </div>
-          <h1 className="font-bold text-xl tracking-tight">Bean & Brew</h1>
+          <h1 className="font-bold text-xl tracking-tight text-[#4A3222]">KALA KOPI</h1>
         </Link>
 
         <div className="mb-8 px-2 py-3 bg-[#FDFCFB] rounded-2xl border border-[#E8E1D9]">

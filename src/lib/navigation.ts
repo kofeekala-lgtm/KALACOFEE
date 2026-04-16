@@ -50,12 +50,6 @@ export const navigationConfig: NavItem[] = [
     icon: Store, 
     roles: ['Admin'] 
   },
-  { 
-    path: '/tables', 
-    label: 'Meja', 
-    icon: MapPin, 
-    roles: ['Admin'] 
-  },
 ];
 
 export const getAuthorizedNavItems = (role: string) => {

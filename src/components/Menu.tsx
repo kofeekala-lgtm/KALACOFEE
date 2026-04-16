@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { api, Product, Category, CustomizationOption, CustomizationGroup, Table, CafeProfile } from '../lib/api';
-import { ShoppingCart, Plus, Minus, X, ChevronDown, ChevronUp, Check, MapPin, User, Instagram, Facebook, Twitter, Phone, Mail } from 'lucide-react';
+import { api, Product, Category, CustomizationOption, CustomizationGroup, CafeProfile } from '../lib/api';
+import { ShoppingCart, Plus, Minus, X, ChevronDown, ChevronUp, Check, User, Instagram, Facebook, Twitter, Phone, Mail, MapPin } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function Menu() {
@@ -9,11 +9,10 @@ export default function Menu() {
   const [isLoading, setIsLoading] = useState(true);
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [tables, setTables] = useState<Table[]>([]);
-  const [selectedTable, setSelectedTable] = useState<string>('');
-  const [cart, setCart] = useState<{ 
+
+  const [cart, setCart] = useState<{
     id: string; // Unique ID for cart item (product_id + customization hash)
-    product: Product; 
+    product: Product;
     quantity: number;
     customizations: { groupName: string; selectedOptions: CustomizationOption[] }[];
     notes: string;
@@ -33,16 +32,15 @@ export default function Menu() {
       setIsLoading(true);
       try {
         // Optimasi: Gunakan Promise.all untuk fetch paralel
-        const [productsData, categoriesData, tablesData, profileData] = await Promise.all([
+        const [productsData, categoriesData, profileData] = await Promise.all([
           api.getProducts(),
           api.getCategories(),
-          api.getTables(),
           api.getCafeProfile()
         ]);
-        
+
         setProducts(productsData);
         setCategories(categoriesData);
-        setTables(tablesData);
+
         setProfile(profileData);
       } catch (error) {
         console.error('Error fetching menu data:', error);
@@ -50,7 +48,7 @@ export default function Menu() {
         setIsLoading(false);
       }
     };
-    
+
     fetchData();
   }, []);
 
@@ -96,7 +94,7 @@ export default function Menu() {
   };
 
   const addToCart = (
-    product: Product, 
+    product: Product,
     customizations: { groupName: string; selectedOptions: CustomizationOption[] }[],
     itemNotes: string,
     quantity: number
@@ -107,15 +105,15 @@ export default function Menu() {
     setCart(prev => {
       const existing = prev.find(item => item.id === cartItemId);
       if (existing) {
-        return prev.map(item => 
-          item.id === cartItemId 
-            ? { ...item, quantity: item.quantity + quantity } 
+        return prev.map(item =>
+          item.id === cartItemId
+            ? { ...item, quantity: item.quantity + quantity }
             : item
         );
       }
       return [...prev, { id: cartItemId, product, quantity, customizations, notes: itemNotes }];
     });
-    
+
     if (customizingProduct) {
       setCustomizingProduct(null);
     }
@@ -123,9 +121,9 @@ export default function Menu() {
 
   const confirmCustomization = () => {
     if (!customizingProduct) return;
-    
+
     // Check if all required groups have selections
-    const missingRequired = customizingProduct.customization_groups?.some(group => 
+    const missingRequired = customizingProduct.customization_groups?.some(group =>
       group.is_required && (!selectedOptions[group.name] || selectedOptions[group.name].length < group.min_selection)
     );
 
@@ -189,7 +187,7 @@ export default function Menu() {
     return sum + (itemPrice * item.quantity);
   }, 0);
 
-  const currentCustomPrice = customizingProduct 
+  const currentCustomPrice = customizingProduct
     ? (customizingProduct.price + (Object.values(selectedOptions).flat() as CustomizationOption[]).reduce((sum, o) => sum + o.price, 0)) * customQuantity
     : 0;
 
@@ -199,21 +197,18 @@ export default function Menu() {
       alert('Mohon masukkan nama Anda');
       return;
     }
-    if (!selectedTable) {
-      alert('Mohon pilih nomor meja');
-      return;
-    }
-    const items = cart.map(item => ({ 
-      id: item.product.id, 
+
+    const items = cart.map(item => ({
+      id: item.product.id,
       name: item.product.name,
-      quantity: item.quantity, 
+      quantity: item.quantity,
       price: calculateItemPrice(item.product, item.customizations),
       customizations: item.customizations,
       notes: item.notes
     }));
     setIsProcessing(true);
     try {
-      const order = await api.createOrder(items, total, paymentMethod, selectedTable, customerName);
+      const order = await api.createOrder(items, total, paymentMethod, '', customerName);
       setCart([]);
       setIsCartOpen(false);
       navigate('/order-confirmation', { state: { order: { ...order, items } } });
@@ -233,14 +228,14 @@ export default function Menu() {
           <span className="cursor-default">Serang</span>
           <span className="text-[#E8E1D9]">/</span>
           <Link to="/menu" className="text-[#6F4E37] hover:underline font-bold transition-colors">
-            {profile?.name || 'Bitts Coffee'} {profile?.address}
+            {profile?.name || 'KALA KOPI'} {profile?.address}
           </Link>
         </nav>
-        
+
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <h2 className="text-3xl font-bold">{profile?.name || 'Bitts Coffee'}</h2>
+              <h2 className="text-3xl font-bold">{profile?.name || 'KALA KOPI'}</h2>
               <span className="bg-orange-100 text-orange-600 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Super Partner</span>
             </div>
             <div className="flex items-center gap-4 text-sm text-[#8C7B6E]">
@@ -264,24 +259,23 @@ export default function Menu() {
         {/* Hero Section Description */}
         <div className="mt-6 p-6 md:p-10 rounded-[2rem] bg-gradient-to-br from-[#6F4E37] to-[#4A3222] text-white overflow-hidden relative group shadow-2xl shadow-[#6F4E37]/30">
           <div className="relative z-10 space-y-3 max-w-2xl">
-            <motion.h1 
+            <motion.h1
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               className="text-2xl md:text-5xl font-black tracking-tight"
             >
-              Kopi Terbaik, <br />Hanya di Bitts Coffee.
+              Kopi & Matcha Terbaik, <br />Hanya di KALA KOPI.
             </motion.h1>
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.1 }}
               className="text-white/80 text-xs md:text-lg leading-relaxed font-medium"
             >
-              Kami mengurasi biji kopi pilihan dari berbagai daerah di Indonesia, 
-              disangrai dengan penuh dedikasi untuk menciptakan keseimbangan rasa yang pas. 
-              Temukan pengalaman ngopi santai dengan menu pilihan kami yang beragam.
+              Nikmati perpaduan sempurna biji kopi pilihan dan matcha premium mulai dari 10K.
+              Temukan Best Seller kami, Matcha Latte, atau coba kesegaran baru dari Butterscotch Coffee.
             </motion.p>
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
@@ -315,7 +309,7 @@ export default function Menu() {
           </button>
           {isLoading ? (
             // Skeleton buttons
-            [1,2,3,4,5].map(i => (
+            [1, 2, 3, 4, 5].map(i => (
               <div key={i} className="px-10 py-5 rounded-full animate-skeleton" />
             ))
           ) : (
@@ -336,7 +330,7 @@ export default function Menu() {
       <div className="space-y-12">
         {isLoading ? (
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
-            {[1,2,3,4,5,6,7,8].map(i => <Skeleton key={i} />)}
+            {[1, 2, 3, 4, 5, 6, 7, 8].map(i => <Skeleton key={i} />)}
           </div>
         ) : (
           categories.map(category => {
@@ -349,7 +343,7 @@ export default function Menu() {
                   <h3 className="text-2xl font-bold text-[#6F4E37]">{category.name}</h3>
                   <div className="h-[1px] flex-1 bg-[#E8E1D9]"></div>
                 </div>
-                
+
                 <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 md:gap-6">
                   {categoryProducts.map(product => (
                     <motion.div
@@ -361,9 +355,9 @@ export default function Menu() {
                       className="bg-white rounded-xl md:rounded-2xl border border-[#E8E1D9] overflow-hidden hover:shadow-xl transition-shadow group flex flex-col"
                     >
                       <div className="h-32 md:h-48 overflow-hidden relative bg-gray-50">
-                        <img 
-                          src={product.image_url} 
-                          alt={product.name} 
+                        <img
+                          src={product.image_url}
+                          alt={product.name}
                           loading="lazy"
                           className={`w-full h-full object-cover group-hover:scale-110 transition-transform duration-500 ${!product.is_available ? 'grayscale opacity-50' : ''}`}
                           referrerPolicy="no-referrer"
@@ -454,11 +448,10 @@ export default function Menu() {
                             key={option.name}
                             onClick={() => toggleOption(group, option)}
                             disabled={!option.is_available}
-                            className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all ${
-                              isSelected 
-                                ? 'border-[#6F4E37] bg-[#FDFCFB]' 
+                            className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all ${isSelected
+                                ? 'border-[#6F4E37] bg-[#FDFCFB]'
                                 : 'border-[#E8E1D9] hover:border-[#6F4E37]'
-                            } ${!option.is_available ? 'opacity-50 cursor-not-allowed' : ''}`}
+                              } ${!option.is_available ? 'opacity-50 cursor-not-allowed' : ''}`}
                           >
                             <div className="flex items-center gap-3">
                               <span className="font-medium">{option.name}</span>
@@ -466,9 +459,8 @@ export default function Menu() {
                             </div>
                             <div className="flex items-center gap-3">
                               {option.price > 0 && <span className="text-sm text-[#8C7B6E]">+{option.price.toLocaleString()}</span>}
-                              <div className={`w-6 h-6 rounded-md border flex items-center justify-center transition-colors ${
-                                isSelected ? 'bg-[#6F4E37] border-[#6F4E37] text-white' : 'border-[#E8E1D9]'
-                              }`}>
+                              <div className={`w-6 h-6 rounded-md border flex items-center justify-center transition-colors ${isSelected ? 'bg-[#6F4E37] border-[#6F4E37] text-white' : 'border-[#E8E1D9]'
+                                }`}>
                                 {isSelected && <Check size={16} />}
                               </div>
                             </div>
@@ -503,14 +495,14 @@ export default function Menu() {
                 <div className="flex items-center justify-between">
                   <span className="font-bold">Mau berapa?</span>
                   <div className="flex items-center gap-4">
-                    <button 
+                    <button
                       onClick={() => setCustomQuantity(q => Math.max(1, q - 1))}
                       className="w-10 h-10 rounded-full border border-[#E8E1D9] flex items-center justify-center hover:bg-white"
                     >
                       <Minus size={20} />
                     </button>
                     <span className="font-bold text-lg w-4 text-center">{customQuantity}</span>
-                    <button 
+                    <button
                       onClick={() => setCustomQuantity(q => q + 1)}
                       className="w-10 h-10 rounded-full border border-[#E8E1D9] flex items-center justify-center hover:bg-white"
                     >
@@ -588,30 +580,7 @@ export default function Menu() {
                     />
                   </div>
 
-                  <div>
-                    <p className="text-sm font-bold mb-3 flex items-center gap-2">
-                      <MapPin size={16} className="text-[#6F4E37]" />
-                      Pilih Nomor Meja
-                    </p>
-                    <div className="grid grid-cols-5 gap-2">
-                      {tables.map(table => (
-                        <button
-                          key={table.id}
-                          onClick={() => setSelectedTable(table.name)}
-                          className={`py-2 rounded-lg border text-xs font-bold transition-all ${
-                            selectedTable === table.name
-                              ? 'bg-[#6F4E37] text-white border-[#6F4E37]'
-                              : 'bg-white text-[#8C7B6E] border-[#E8E1D9] hover:border-[#6F4E37]'
-                          }`}
-                        >
-                          {table.name}
-                        </button>
-                      ))}
-                    </div>
-                    {selectedTable && (
-                      <p className="text-[10px] text-[#6F4E37] mt-2 font-medium">Terpilih: <span className="font-bold">{selectedTable}</span></p>
-                    )}
-                  </div>
+
                 </div>
 
                 {cart.map(item => (
@@ -649,21 +618,19 @@ export default function Menu() {
                   <div className="grid grid-cols-2 gap-3">
                     <button
                       onClick={() => setPaymentMethod('Transfer Bank')}
-                      className={`py-3 rounded-xl border font-medium transition-all ${
-                        paymentMethod === 'Transfer Bank'
+                      className={`py-3 rounded-xl border font-medium transition-all ${paymentMethod === 'Transfer Bank'
                           ? 'bg-[#6F4E37] text-white border-[#6F4E37]'
                           : 'bg-white text-[#8C7B6E] border-[#E8E1D9] hover:border-[#6F4E37]'
-                      }`}
+                        }`}
                     >
                       Transfer Bank
                     </button>
                     <button
                       onClick={() => setPaymentMethod('Tunai')}
-                      className={`py-3 rounded-xl border font-medium transition-all ${
-                        paymentMethod === 'Tunai'
+                      className={`py-3 rounded-xl border font-medium transition-all ${paymentMethod === 'Tunai'
                           ? 'bg-[#6F4E37] text-white border-[#6F4E37]'
                           : 'bg-white text-[#8C7B6E] border-[#E8E1D9] hover:border-[#6F4E37]'
-                      }`}
+                        }`}
                     >
                       Tunai
                     </button>
@@ -677,14 +644,13 @@ export default function Menu() {
                 <button
                   onClick={handleCheckout}
                   disabled={isProcessing}
-                  className={`w-full text-white font-bold py-4 rounded-2xl shadow-lg transition-all ${
-                    isProcessing ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#6F4E37] shadow-[#6F4E37]/20 hover:bg-[#5A3F2D]'
-                  }`}
+                  className={`w-full text-white font-bold py-4 rounded-2xl shadow-lg transition-all ${isProcessing ? 'bg-gray-400 cursor-not-allowed' : 'bg-[#6F4E37] shadow-[#6F4E37]/20 hover:bg-[#5A3F2D]'
+                    }`}
                 >
                   {isProcessing ? (
                     <div className="flex items-center justify-center gap-2">
-                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                       Memproses...
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                      Memproses...
                     </div>
                   ) : (
                     'Konfirmasi Pesanan'
@@ -703,16 +669,15 @@ export default function Menu() {
             {/* Branding */}
             <div className="space-y-6">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-[#6F4E37] rounded-xl flex items-center justify-center text-white font-black text-xl">B</div>
-                <h3 className="text-2xl font-bold tracking-tight">{profile?.name || 'Bitts Coffee'}</h3>
+                <div className="w-10 h-10 bg-[#6F4E37] rounded-xl flex items-center justify-center text-white font-black text-xl">K</div>
+                <h3 className="text-2xl font-bold tracking-tight">{profile?.name || 'KALA KOPI'}</h3>
               </div>
               <p className="text-gray-400 text-sm leading-relaxed">
-                Menyajikan kehangatan dalam setiap cangkir. Bitts Coffee adalah tempat di mana kualitas kopi bertemu dengan kenyamanan tempat.
+                Menyajikan kehangatan dalam setiap cangkir. KALA KOPI & Catsu Matcha adalah tempat di mana kualitas kopi & matcha bertemu dengan kenyamanan tempat.
               </p>
               <div className="flex gap-4">
-                <a href="#" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-[#6F4E37] transition-all"><Instagram size={20} /></a>
-                <a href="#" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-[#6F4E37] transition-all"><Facebook size={20} /></a>
-                <a href="#" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-[#6F4E37] transition-all"><Twitter size={20} /></a>
+                <a href="https://instagram.com/tokokopikala" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-[#6F4E37] transition-all"><Instagram size={20} /></a>
+                <a href="https://instagram.com/catsu.matcha" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center hover:bg-[#6F4E37] transition-all"><div className="w-5 h-5 flex items-center justify-center font-bold text-[10px]">C</div></a>
               </div>
             </div>
 
@@ -726,11 +691,11 @@ export default function Menu() {
                 </li>
                 <li className="flex gap-3 text-gray-400 text-sm">
                   <Phone size={20} className="text-[#6F4E37] shrink-0" />
-                  <span>{profile?.phone || '+62 812-3456-7890'}</span>
+                  <span>0819 9721 7298</span>
                 </li>
                 <li className="flex gap-3 text-gray-400 text-sm">
                   <Mail size={20} className="text-[#6F4E37] shrink-0" />
-                  <span>{profile?.email || 'hello@bittscoffee.com'}</span>
+                  <span>hello@tokokopikala.com</span>
                 </li>
               </ul>
             </div>
@@ -765,11 +730,11 @@ export default function Menu() {
 
           <div className="pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
             <p className="text-gray-500 text-[10px] md:text-sm">
-              © {new Date().getFullYear()} {profile?.name || 'Bitts Coffee'}. Seluruh hak cipta dilindungi.
+              © {new Date().getFullYear()} {profile?.name || 'KALA KOPI'}. Seluruh hak cipta dilindungi.
             </p>
             <div className="flex items-center gap-2 text-gray-500 text-[10px] md:text-sm">
               <span>Didukung oleh</span>
-              <span className="text-white font-bold tracking-tight">BITTS POS v2.0</span>
+              <span className="text-white font-bold tracking-tight">KALA POS v2.0</span>
             </div>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { api, Order } from '../lib/api';
 import { supabase } from '../lib/supabase';
-import { Clock, CheckCircle2, Trash2, Calendar, X, Search, Eye, Receipt, User, CreditCard, MapPin } from 'lucide-react';
+import { Clock, CheckCircle2, Trash2, Calendar, X, Search, Eye, Receipt, User, CreditCard } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import ErrorBoundary from './ErrorBoundary';
@@ -119,7 +119,6 @@ function AdminContent() {
             <tr className="bg-[#FDFCFB] text-[#8C7B6E] text-xs uppercase tracking-wider">
               <th className="px-6 py-4 font-bold border-b border-[#E8E1D9]">ID Pesanan</th>
               <th className="px-6 py-4 font-bold border-b border-[#E8E1D9]">Pelanggan</th>
-              <th className="px-6 py-4 font-bold border-b border-[#E8E1D9]">Meja</th>
               <th className="px-6 py-4 font-bold border-b border-[#E8E1D9]">Item</th>
               <th className="px-6 py-4 font-bold border-b border-[#E8E1D9]">Waktu</th>
               <th className="px-6 py-4 font-bold border-b border-[#E8E1D9]">Pembayaran</th>
@@ -132,12 +131,7 @@ function AdminContent() {
               <tr key={order.id} className="hover:bg-[#FDFCFB] transition-colors group">
                 <td className="px-6 py-4 font-bold text-[#6F4E37]">#{order.id}</td>
                 <td className="px-6 py-4 font-bold text-[#1A1A1A]">{order.customer_name || 'Tamu'}</td>
-                <td className="px-6 py-4">
-                  <span className="inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-bold bg-[#F5F1ED] text-[#6F4E37] border border-[#E8E1D9]">
-                    <MapPin size={10} />
-                    {order.table_number || 'N/A'}
-                  </span>
-                </td>
+
                 <td className="px-6 py-4">
                   <p className="text-sm font-medium max-w-xs truncate" title={order.items_summary}>
                     {order.items_summary}
@@ -465,14 +459,8 @@ function AdminContent() {
                 </div>
 
                 {/* Info Grid */}
+
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-[#F5F1ED] rounded-2xl">
-                    <div className="flex items-center gap-2 text-[#8C7B6E] mb-1">
-                      <MapPin size={14} />
-                      <span className="text-[10px] font-bold uppercase">Meja</span>
-                    </div>
-                    <p className="font-bold text-[#6F4E37]">{selectedOrder.table_number || 'N/A'}</p>
-                  </div>
                   <div className="p-4 bg-[#F5F1ED] rounded-2xl">
                     <div className="flex items-center gap-2 text-[#8C7B6E] mb-1">
                       <CreditCard size={14} />
@@ -480,14 +468,12 @@ function AdminContent() {
                     </div>
                     <p className="font-bold text-[#6F4E37]">{selectedOrder.payment_method}</p>
                   </div>
-                </div>
-                <div className="grid grid-cols-1 gap-4">
                   <div className="p-4 bg-[#F5F1ED] rounded-2xl">
                     <div className="flex items-center gap-2 text-[#8C7B6E] mb-1">
                       <User size={14} />
                       <span className="text-[10px] font-bold uppercase">Pelanggan</span>
                     </div>
-                    <p className="font-bold text-[#6F4E37]">{selectedOrder.customer_name || 'Pelanggan Tamu'}</p>
+                    <p className="font-bold text-[#6F4E37]">{selectedOrder.customer_name || 'Tamu'}</p>
                   </div>
                 </div>
               </div>

@@ -15,7 +15,6 @@ const Reports = lazy(() => import('./components/Reports'));
 const Admin = lazy(() => import('./components/Admin'));
 const ProductManagement = lazy(() => import('./components/ProductManagement'));
 const CafeProfile = lazy(() => import('./components/CafeProfile'));
-const TableManagement = lazy(() => import('./components/TableManagement'));
 const PublicHome = lazy(() => import('./components/PublicHome'));
 const Login = lazy(() => import('./components/Login'));
 const OrderConfirmation = lazy(() => import('./components/OrderConfirmation'));
@@ -92,10 +91,6 @@ export default function App() {
             <Route 
               path="/profile" 
               element={<ProtectedRoute user={user} allowedRoles={['Admin']}><CafeProfile /></ProtectedRoute>} 
-            />
-            <Route 
-              path="/tables" 
-              element={<ProtectedRoute user={user} allowedRoles={['Admin']}><TableManagement /></ProtectedRoute>} 
             />
           </Route>
 

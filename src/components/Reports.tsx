@@ -104,9 +104,9 @@ export default function Reports() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-white p-4 md:p-6 rounded-2xl border border-[#E8E1D9] shadow-sm">
           <h3 className="font-bold text-lg mb-6">Tren Pendapatan</h3>
-          <div className="w-full h-64 md:h-80">
+          <div className="w-full h-64 md:h-80 relative">
             {isMounted && (
-              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+              <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={filteredReports}>
                   <defs>
                     <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
@@ -139,9 +139,9 @@ export default function Reports() {
 
         <div className="bg-white p-4 md:p-6 rounded-2xl border border-[#E8E1D9] shadow-sm">
           <h3 className="font-bold text-lg mb-6">Volume Pesanan</h3>
-          <div className="h-64 md:h-80 flex items-center justify-center">
+          <div className="h-64 md:h-80 flex items-center justify-center relative w-full">
             {isMounted && (
-              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+              <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={filteredReports}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E8E1D9" />
                   <XAxis 
@@ -192,9 +192,9 @@ export default function Reports() {
               </div>
             ))}
           </div>
-          <div className="w-full h-64">
+          <div className="w-full h-64 relative">
             {isMounted && (
-              <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
+              <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
                     data={topProducts}
