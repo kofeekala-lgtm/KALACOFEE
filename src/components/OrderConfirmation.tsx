@@ -29,7 +29,7 @@ export default function OrderConfirmation() {
   });
 
   return (
-    <div className="max-w-2xl mx-auto py-8 px-4">
+    <div className="max-w-2xl mx-auto py-4 sm:py-8 px-2 sm:px-4">
       <motion.div 
         id="order-receipt"
         initial={{ opacity: 0, scale: 0.9 }}
@@ -37,7 +37,7 @@ export default function OrderConfirmation() {
         className="bg-white rounded-3xl shadow-xl shadow-[#6F4E37]/5 border border-[#E8E1D9] overflow-hidden"
       >
         {/* Success Header */}
-        <div className="bg-[#6F4E37] p-8 text-center text-white relative overflow-hidden">
+        <div className="bg-[#6F4E37] p-6 sm:p-8 text-center text-white relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-full opacity-10">
             <div className="absolute -top-10 -left-10 w-40 h-40 bg-white rounded-full blur-3xl" />
             <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-white rounded-full blur-3xl" />
@@ -52,24 +52,24 @@ export default function OrderConfirmation() {
             <CheckCircle size={40} className="text-white" />
           </motion.div>
           
-          <h2 className="text-3xl font-bold mb-2">Pesanan Dikonfirmasi!</h2>
-          <p className="text-white/80">Terima kasih atas pembelian Anda. Kopi Anda sedang disiapkan.</p>
+          <h2 className="text-xl sm:text-3xl font-bold mb-1 sm:mb-2">Pesanan Dikonfirmasi!</h2>
+          <p className="text-sm sm:text-base text-white/80">Terima kasih atas pembelian Anda. Kopi Anda sedang disiapkan.</p>
         </div>
 
-        <div className="p-8 space-y-8">
+        <div className="p-4 sm:p-8 space-y-4 sm:space-y-8">
           {/* Order Info */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-[#FDFCFB] p-4 rounded-2xl border border-[#E8E1D9]">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-4">
+            <div className="bg-[#FDFCFB] p-3 sm:p-4 rounded-2xl border border-[#E8E1D9]">
               <p className="text-xs text-[#8C7B6E] uppercase tracking-wider font-bold mb-1">Pelanggan</p>
-              <p className="text-lg font-bold text-[#6F4E37] truncate">{order.customer_name || 'Tamu'}</p>
+              <p className="text-sm sm:text-lg font-bold text-[#6F4E37] truncate">{order.customer_name || 'Tamu'}</p>
             </div>
-            <div className="bg-[#FDFCFB] p-4 rounded-2xl border border-[#E8E1D9]">
+            <div className="bg-[#FDFCFB] p-3 sm:p-4 rounded-2xl border border-[#E8E1D9]">
               <p className="text-xs text-[#8C7B6E] uppercase tracking-wider font-bold mb-1">Nomor Pesanan</p>
-              <p className="text-lg font-bold text-[#6F4E37]">#ORD-{order.id.toString().padStart(4, '0')}</p>
+              <p className="text-sm sm:text-lg font-bold text-[#6F4E37]">#ORD-{order.id.toString().padStart(4, '0')}</p>
             </div>
-            <div className="bg-[#FDFCFB] p-4 rounded-2xl border border-[#E8E1D9]">
+            <div className="bg-[#FDFCFB] p-3 sm:p-4 rounded-2xl border border-[#E8E1D9]">
               <p className="text-xs text-[#8C7B6E] uppercase tracking-wider font-bold mb-1">Estimasi Selesai</p>
-              <div className="flex items-center gap-2 text-lg font-bold text-[#6F4E37]">
+              <div className="flex items-center gap-2 text-sm sm:text-lg font-bold text-[#6F4E37]">
                 <Clock size={18} />
                 {estimatedTime}
               </div>
@@ -78,14 +78,14 @@ export default function OrderConfirmation() {
 
           {/* Order Details */}
           <div>
-            <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-              <Coffee size={20} className="text-[#6F4E37]" />
+            <h3 className="text-base sm:text-lg font-bold mb-2 sm:mb-4 flex items-center gap-2">
+              <Coffee size={18} className="text-[#6F4E37]" />
               Ringkasan Pesanan
             </h3>
             <div className="bg-[#FDFCFB] rounded-2xl border border-[#E8E1D9] divide-y divide-[#E8E1D9]">
-              <div className="p-4 space-y-4">
+              <div className="p-3 sm:p-4 space-y-2 sm:space-y-4">
                 {order.items?.map((item: any, idx: number) => (
-                  <div key={idx} className="flex justify-between items-start py-4 first:pt-0 last:pb-0">
+                  <div key={idx} className="flex justify-between items-start py-2 sm:py-4 first:pt-0 last:pb-0">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="bg-[#6F4E37]/10 text-[#6F4E37] text-[10px] font-black px-2 py-0.5 rounded-full">
@@ -97,7 +97,7 @@ export default function OrderConfirmation() {
                       </div>
                       
                       {/* Add-ons / Customizations */}
-                      <div className="space-y-1 ml-9">
+                      <div className="space-y-1 ml-7 sm:ml-9">
                         {item.customizations?.map((c: any) => (
                           <div key={c.groupName} className="flex items-center gap-2">
                             <span className="text-[10px] text-[#8C7B6E] font-medium leading-none">
@@ -115,7 +115,7 @@ export default function OrderConfirmation() {
                       </div>
 
                       {item.notes && (
-                        <div className="ml-9 mt-2 p-2 bg-yellow-50 border-l-2 border-yellow-200 rounded-r-lg">
+                        <div className="ml-7 sm:ml-9 mt-1 sm:mt-2 p-1.5 sm:p-2 bg-yellow-50 border-l-2 border-yellow-200 rounded-r-lg">
                           <p className="text-[10px] italic text-[#8C7B6E]">
                             "{item.notes}"
                           </p>
@@ -131,14 +131,14 @@ export default function OrderConfirmation() {
                 ))}
               </div>
               
-              <div className="p-4 flex justify-between items-center text-sm">
+              <div className="p-3 sm:p-4 flex justify-between items-center text-sm">
                 <span className="text-[#8C7B6E]">Metode Pembayaran</span>
                 <span className="font-bold text-[#6F4E37]">{order.payment_method}</span>
               </div>
 
-              <div className="p-4 flex justify-between items-center bg-[#F5F1ED]/30">
+              <div className="p-3 sm:p-4 flex justify-between items-center bg-[#F5F1ED]/30">
                 <span className="font-bold text-[#8C7B6E]">Total Dibayar</span>
-                <span className="text-xl font-bold text-[#6F4E37]">Rp {order.total_amount.toLocaleString()}</span>
+                <span className="text-lg sm:text-xl font-bold text-[#6F4E37]">Rp {order.total_amount.toLocaleString()}</span>
               </div>
             </div>
           </div>
@@ -151,14 +151,14 @@ export default function OrderConfirmation() {
             <div className="flex flex-col sm:flex-row gap-3">
               <button 
                 onClick={() => navigate('/menu')}
-                className="flex-1 btn btn-outline py-4 rounded-2xl flex items-center justify-center gap-2"
+                className="flex-1 btn btn-outline py-3 sm:py-4 rounded-2xl flex items-center justify-center gap-2"
               >
                 <ShoppingBag size={18} />
                 Kembali ke Menu
               </button>
               <button 
                 onClick={() => window.print()}
-                className="flex-1 btn btn-primary py-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-[#6F4E37]/20"
+                className="flex-1 btn btn-primary py-3 sm:py-4 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-[#6F4E37]/20"
               >
                 <Printer size={18} />
                 Cetak Struk
