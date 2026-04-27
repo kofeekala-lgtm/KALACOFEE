@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { api, CafeProfile, Category, FinanceCategory, Unit, EmployeeRole } from '../lib/api';
-import { Store, MapPin, Phone, Mail, Instagram, Clock, CreditCard, Edit2, Save, X, Plus, Trash2, Settings, Database } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { api, CafeProfile, Category, FinanceCategory, Unit, EmployeeRole, Employee, CustomizationTemplate } from '../lib/api';
+import { Store, MapPin, Phone, Mail, Instagram, Clock, CreditCard, Edit2, Save, X, Plus, Trash2, Settings, Database, Key, ShieldCheck, Lock } from 'lucide-react';
 
-export default function CafeProfilePage() {
-  const [activeTab, setActiveTab] = useState<'profile' | 'master'>('profile');
+import { motion } from 'framer-motion';
+
+export default function CafeProfilePage({ user }: { user: any }) {
+  const [activeTab, setActiveTab] = useState<'profile' | 'master' | 'security'>('profile');
+
   const [profile, setProfile] = useState<CafeProfile | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedProfile, setEditedProfile] = useState<CafeProfile | null>(null);
@@ -28,6 +30,13 @@ export default function CafeProfilePage() {
     max_selection: 1,
     options: [] as any[]
   });
+  // Password Reset States
+  const [passwordForm, setPasswordForm] = useState({
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [passwordStatus, setPasswordStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
+  const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
 
   useEffect(() => {
     loadProfile();
@@ -163,6 +172,42 @@ export default function CafeProfilePage() {
     setNewTemplate({ ...newTemplate, options: newOptions });
   };
 
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordStatus(null);
+
+    if (!user || !user.id) {
+      setPasswordStatus({ type: 'error', message: 'Informasi pengguna tidak valid. Silakan login kembali.' });
+      return;
+    }
+
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      setPasswordStatus({ type: 'error', message: 'Konfirmasi kata sandi tidak cocok.' });
+      return;
+    }
+
+    if (passwordForm.newPassword.length < 6) {
+      setPasswordStatus({ type: 'error', message: 'Kata sandi minimal 6 karakter.' });
+      return;
+    }
+
+    setIsUpdatingPassword(true);
+    try {
+      if (user.id === 0) {
+         setPasswordStatus({ type: 'error', message: 'Akun Master Admin tidak dapat diubah dari sini.' });
+      } else {
+        await api.updateEmployee(user.id, { password: passwordForm.newPassword });
+        setPasswordStatus({ type: 'success', message: 'Kata sandi berhasil diperbarui!' });
+        setPasswordForm({ newPassword: '', confirmPassword: '' });
+      }
+    } catch (err: any) {
+      setPasswordStatus({ type: 'error', message: 'Gagal memperbarui kata sandi: ' + (err.message || 'Error unknown') });
+    } finally {
+      setIsUpdatingPassword(false);
+    }
+  };
+
+
   if (!profile || !editedProfile) return <div className="p-8 text-center">Memuat...</div>;
 
   return (
@@ -208,10 +253,18 @@ export default function CafeProfilePage() {
           <Database size={18} />
           Master Data
         </button>
+        <button 
+          onClick={() => setActiveTab('security')}
+          className={`flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-bold transition-all ${activeTab === 'security' ? 'bg-[#6F4E37] text-white shadow-md' : 'text-[#8C7B6E] hover:text-[#6F4E37]'}`}
+        >
+          <Lock size={18} />
+          Keamanan
+        </button>
       </div>
 
-      {activeTab === 'profile' ? (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+      {activeTab === 'profile' && (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-fadeIn">
           {/* Basic Info */}
           <div className="md:col-span-2 space-y-6">
             <section className="bg-white p-6 rounded-3xl border border-[#E8E1D9] shadow-sm space-y-6">
@@ -447,8 +500,10 @@ export default function CafeProfilePage() {
           </div>
         </div>
       </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+      )}
+
+      {activeTab === 'master' && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 animate-fadeIn">
           {/* Kategori Produk */}
           <section className="bg-white p-6 rounded-3xl border border-[#E8E1D9] shadow-sm space-y-6">
             <div className="flex items-center justify-between border-b border-[#E8E1D9] pb-4">
@@ -705,6 +760,81 @@ export default function CafeProfilePage() {
                   </div>
                 </div>
               ))}
+            </div>
+          </section>
+        </div>
+      )}
+
+      {activeTab === 'security' && (
+        <div className="max-w-2xl mx-auto animate-fadeIn">
+          <section className="bg-white p-8 rounded-3xl border border-[#E8E1D9] shadow-sm space-y-8">
+            <div className="flex items-center gap-4 text-[#6F4E37] border-b border-[#E8E1D9] pb-6">
+              <div className="w-12 h-12 bg-[#6F4E37]/10 rounded-2xl flex items-center justify-center">
+                <ShieldCheck size={28} />
+              </div>
+              <div>
+                <h3 className="font-bold text-xl">Reset Kata Sandi</h3>
+                <p className="text-sm text-[#8C7B6E]">Perbarui kata sandi akun Anda secara berkala.</p>
+              </div>
+            </div>
+
+            {passwordStatus && (
+              <div className={`p-4 rounded-2xl border text-sm animate-fadeIn ${
+                passwordStatus.type === 'success' 
+                  ? 'bg-green-50 border-green-100 text-green-700' 
+                  : 'bg-red-50 border-red-100 text-red-700'
+              }`}>
+                {passwordStatus.message}
+              </div>
+            )}
+
+            <form onSubmit={handleUpdatePassword} className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-[#3C2A21]">Kata Sandi Baru</label>
+                <div className="relative">
+                  <Key className="absolute left-4 top-1/2 -translate-y-1/2 text-[#BCB1A6]" size={18} />
+                  <input
+                    type="password"
+                    required
+                    placeholder="Minimal 6 karakter"
+                    className="w-full pl-12 p-3.5 rounded-2xl border border-[#E8E1D9] focus:border-[#6F4E37] focus:ring-4 focus:ring-[#6F4E37]/5 outline-none transition-all"
+                    value={passwordForm.newPassword}
+                    onChange={e => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-bold text-[#3C2A21]">Konfirmasi Kata Sandi Baru</label>
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-[#BCB1A6]" size={18} />
+                  <input
+                    type="password"
+                    required
+                    placeholder="Ulangi kata sandi baru"
+                    className="w-full pl-12 p-3.5 rounded-2xl border border-[#E8E1D9] focus:border-[#6F4E37] focus:ring-4 focus:ring-[#6F4E37]/5 outline-none transition-all"
+                    value={passwordForm.confirmPassword}
+                    onChange={e => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isUpdatingPassword}
+                className="w-full btn btn-primary py-4 text-base font-bold shadow-lg shadow-[#6F4E37]/20 disabled:opacity-50"
+              >
+                {isUpdatingPassword ? 'Memperbarui...' : 'Simpan Kata Sandi Baru'}
+              </button>
+            </form>
+
+            <div className="bg-[#FDFCFB] p-5 rounded-2xl border border-[#E8E1D9] space-y-2">
+              <h4 className="text-xs font-bold text-[#8C7B6E] uppercase tracking-wider">Tips Keamanan</h4>
+              <ul className="text-xs text-[#8C7B6E] space-y-1.5 list-disc pl-4 leading-relaxed">
+                <li>Gunakan kombinasi huruf besar, huruf kecil, angka, dan simbol.</li>
+                <li>Jangan gunakan kata sandi yang mudah ditebak (seperti tanggal lahir).</li>
+                <li>Jangan gunakan kata sandi yang sama dengan akun media sosial Anda.</li>
+              </ul>
             </div>
           </section>
         </div>

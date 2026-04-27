@@ -90,8 +90,9 @@ export default function App() {
             />
             <Route 
               path="/profile" 
-              element={<ProtectedRoute user={user} allowedRoles={['Admin']}><CafeProfile /></ProtectedRoute>} 
+              element={<ProtectedRoute user={user} allowedRoles={['Admin']}><CafeProfile user={user} /></ProtectedRoute>} 
             />
+
           </Route>
 
           {/* 404 Fallback */}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { api, FinancialTransaction, FinancialSummary, IngredientPurchase, Ingredient, FinanceCategory } from '../lib/api';
+import { api, FinancialTransaction, FinancialSummary, IngredientPurchase, Ingredient, FinanceCategory, CafeProfile } from '../lib/api';
 import { 
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, 
   BarChart, Bar, Legend, Cell, PieChart, Pie, AreaChart, Area
@@ -29,6 +29,7 @@ export default function Finance() {
   const [purchases, setPurchases] = useState<IngredientPurchase[]>([]);
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [financeCategories, setFinanceCategories] = useState<FinanceCategory[]>([]);
+  const [profile, setProfile] = useState<CafeProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [isMounted, setIsMounted] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -74,18 +75,20 @@ export default function Finance() {
   const loadData = async () => {
     setLoading(true);
     try {
-      const [tData, sData, pData, iData, fcData] = await Promise.all([
+      const [tData, sData, pData, iData, fcData, profData] = await Promise.all([
         api.getFinancialTransactions(100), // Batasi 100 transaksi terbaru untuk tabel utama
         api.getFinancialSummary(),
         api.getIngredientPurchases(),
         api.getIngredients(),
-        api.getFinanceCategories()
+        api.getFinanceCategories(),
+        api.getCafeProfile()
       ]);
       setTransactions(tData);
       setSummary(sData);
       setPurchases(pData);
       setIngredients(iData);
       setFinanceCategories(fcData);
+      setProfile(profData);
     } catch (error) {
       console.error('Error loading financial data:', error);
     } finally {
@@ -362,7 +365,11 @@ export default function Finance() {
             <div className="text-lg md:text-2xl font-bold text-[#3C2A21]">
               {formatCurrency(summary?.bank_balance || 0)}
             </div>
-            <div className="mt-2 text-xs text-blue-600 font-medium">BCA & Mandiri</div>
+            <div className="mt-2 text-xs text-blue-600 font-medium truncate">
+              {profile?.bank_accounts && profile.bank_accounts.length > 0 
+                ? profile.bank_accounts.map(acc => `${acc.bank_name}: ${acc.account_number}`).join(' | ')
+                : 'BCA & Mandiri'}
+            </div>
           </motion.div>
 
           {/* ... other cards remain similar, just ensuring they match color scheme ... */}

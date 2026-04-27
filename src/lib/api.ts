@@ -153,7 +153,7 @@ export interface EmployeeRole {
 }
 
 export interface Employee {
-  id: number;
+  id: any;
   name: string;
   role_id: number;
   role_name?: string;
@@ -553,11 +553,11 @@ export const api = {
     const { data } = await supabase.from('employees').insert([employee]).select('*, employee_roles(name)').single();
     return { ...data, role_name: data.employee_roles?.name || 'Unknown' };
   },
-  updateEmployee: async (id: number, updates: Partial<Employee>) => {
+  updateEmployee: async (id: any, updates: Partial<Employee>) => {
     const { data } = await supabase.from('employees').update(updates).eq('id', id).select('*, employee_roles(name)').single();
     return { ...data, role_name: data.employee_roles?.name || 'Unknown' };
   },
-  deleteEmployee: async (id: number) => {
+  deleteEmployee: async (id: any) => {
     await supabase.from('employees').delete().eq('id', id);
   },
 

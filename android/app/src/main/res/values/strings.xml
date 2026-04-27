@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Bits Coffee</string>
+    <string name="title_activity_main">Bits Coffee</string>
+    <string name="package_name">com.bitscofee.app</string>
+    <string name="custom_url_scheme">com.bitscofee.app</string>
+</resources>

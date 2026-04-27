@@ -7,10 +7,12 @@ VALUES (
     (SELECT id FROM employee_roles WHERE name = 'Admin' LIMIT 1),
     '081997217298',
     'kofeekala@gmail.com',
-    'kala123', -- Kata sandi untuk login di aplikasi
+    'Gedangburuk22', -- Kata sandi yang diberikan user
     'Aktif',
     CURRENT_DATE
 )
 ON CONFLICT (email) DO UPDATE SET
 role_id = EXCLUDED.role_id,
+password = EXCLUDED.password,
 status = 'Aktif';
+
